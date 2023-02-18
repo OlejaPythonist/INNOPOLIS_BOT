@@ -18,3 +18,4 @@ if __name__ == "__main__":
     dp = create_bot()
     register_handlers(dp)
     executor.start_polling(dp)
+
