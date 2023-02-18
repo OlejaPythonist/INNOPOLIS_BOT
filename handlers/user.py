@@ -1,3 +1,5 @@
+import asyncio
+from typing import Callable, Iterator
 from aiogram import Dispatcher  # type: ignore
 from aiogram import types
 from keyboards.user import commands_keyboard
@@ -16,31 +18,44 @@ async def start(message: types.Message) -> None:
     )  # текст нужно придумать
 
 
-async def bachelor(call: types.CallbackQuery) -> None:
+async def answer(
+        call: types.CallbackQuery,
+        url: str,
+        get_info: Callable[[str], Iterator[tuple[str, str]]]) -> None:
     await call.message.answer("ПОИСК ИНФОРМАЦИИ НАЧАЛСЯ")
-    url = "https://apply.innopolis.university/bachelor/"\
-          "?lang=ru&id=12&site=s1&template=university24&landing_mode=edit"
-    texts = await parse(url, get_bachelor_text)
+
+    try:
+        texts = await parse(url, get_info)
+    except asyncio.TimeoutError as ex:
+        await call.message.answer("С сайтом неполадки. Попробуйте снова позже")
+        raise ex
+    except Exception as ex:
+        await call.message.answer("Что-то пошло не так...")
+        raise ex
+
+    if not texts:
+        await call.message.answer("Информация не найдена")
+
     for text in texts:
         await call.message.answer(text)
+
+
+async def bachelor(call: types.CallbackQuery) -> None:
+    url = "https://apply.innopolis.university/bachelor/"\
+          "?lang=ru&id=12&site=s1&template=university24&landing_mode=edit"
+    await answer(call, url, get_bachelor_text)
 
 
 async def master(call: types.CallbackQuery) -> None:
-    await call.message.answer("ПОИСК ИНФОРМАЦИИ НАЧАЛСЯ")
     url = "https://apply.innopolis.university/master/datascience/"\
           "?lang=ru&id=12&site=s1&template=university24&landing_mode=edit"
-    texts = await parse(url, get_master_text)
-    for text in texts:
-        await call.message.answer(text)
+    await answer(call, url, get_master_text)
 
 
 async def postgraduate(call: types.CallbackQuery) -> None:
-    await call.message.answer("ПОИСК ИНФОРМАЦИИ НАЧАЛСЯ")
     url = "https://apply.innopolis.university/postgraduate-study/"\
           "?lang=ru&id=12&site=s1&template=university24&landing_mode=edit"
-    texts = await parse(url, get_postgraduate_text)
-    for text in texts:
-        await call.message.answer(text)
+    await answer(call, url, get_postgraduate_text)
 
 
 async def trash(message: types.Message) -> None:
