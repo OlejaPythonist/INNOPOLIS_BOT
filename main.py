@@ -1,6 +1,6 @@
 import logging
 
-from aiogram import Bot, Dispatcher, executor # type: ignore
+from aiogram import Bot, Dispatcher, executor  # type: ignore
 from handlers.user import register_handlers
 
 
