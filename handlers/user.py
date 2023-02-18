@@ -18,6 +18,13 @@ async def start(message: types.Message) -> None:
     )  # текст нужно придумать
 
 
+async def help(message: types.Message) -> None:
+    await message.reply(
+        "Привет)",
+        reply_markup=commands_keyboard
+    )  # текст нужно придумать
+
+
 async def answer(
         call: types.CallbackQuery,
         url: str,
@@ -68,7 +75,11 @@ async def trash(message: types.Message) -> None:
 def register_handlers(dp: Dispatcher) -> None:
     dp.register_message_handler(
         start,
-        commands=["start", "help"]
+        commands=["start"]
+    )
+    dp.register_message_handler(
+        start,
+        commands=["help"]
     )
     dp.register_message_handler(trash)
     dp.register_callback_query_handler(
