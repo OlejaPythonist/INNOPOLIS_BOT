@@ -13,7 +13,6 @@ def get_bachelor_text(text: str) -> zip[tuple[str, str]]:
     )
 
 
-
 def get_master_text(text: str) -> zip[tuple[str, str]]:
     soup = BeautifulSoup(text, "html.parser")
     titles = soup.find_all("h2", {"class": "how-to-proceed__info-title"})
@@ -40,4 +39,4 @@ async def parse(
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             html = await response.text()
-    return ["\n\n".join(x) for x  in get_info(html)]
+    return ["\n\n".join(x) for x in get_info(html)]
