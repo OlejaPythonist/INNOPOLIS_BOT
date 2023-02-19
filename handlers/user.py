@@ -12,10 +12,11 @@ from parsing.parse_info import (
 
 
 async def start(message: types.Message) -> None:
-    photo = open('images/UNI_photo.jpg', 'rb')
+    photo = open("images/UNI_photo.jpg", "rb")
+    name = message.from_user.username
     await message.answer_photo(
         photo,
-        caption='Привет! это бот команды ENIGMA',
+        caption=f"Привет, {name}, это бот команды ENIGMA",
         reply_markup=commands_keyboard
     )  # текст нужно придумать
 
