@@ -78,7 +78,7 @@ def register_handlers(dp: Dispatcher) -> None:
         commands=["start"]
     )
     dp.register_message_handler(
-        start,
+        help,
         commands=["help"]
     )
     dp.register_message_handler(trash)
